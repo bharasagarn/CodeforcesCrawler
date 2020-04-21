@@ -1,0 +1,2 @@
+clientid : 135326608196-2mato5sbj462uig1irhpidlut2lm4ego.apps.googleusercontent.com
+clientsecret : KGm_rKHWD_XVyp_mCZCdPTwy

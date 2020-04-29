@@ -4,19 +4,28 @@
     <h2>Codeforces</h2>
 </div>
 <div class="container">
-    <div class="card-columns">
+    <div class="list-group">
     {% for cnt in cnts %}
-    <div class="card bg-light">
+        <a href="https://codeforces.com/contests" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ cnt.cname }}</h5>
+            <small class="text-muted"># days</small>
+          </div>
+          <p class="mb-1">{{ cnt.date }}</p>
+          <p class="mb-1">{{ cnt.time }}<sup>(UTC+0.0</sup></p>
+          <small class="text-muted">Registrations open</small>
+        </a>
+    <!-- <div class="card bg-light">
         <div class="card-body text-center">
         <p class="card-text">{{ cnt.cname }}</p>
         <p class="card-text">{{ cnt.date }}</p>
         <p class="card-text">{{ cnt.time }}<sup>(UTC+0.0)</sup></p>
         </div>
-    </div>
+    </div> -->
     {% endfor %}
     </div>
 </div>
-
+<br>
 <div class="jumbotron">
     <h2>Codechef<sup>(coming soon..)</sup></h2>
 </div>

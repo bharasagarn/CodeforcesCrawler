@@ -1,0 +1,23 @@
+{% extends "signupin/base.html" %}
+{% block body_block %}
+<div class="jumbotron">
+    <h2>Codeforces</h2>
+</div>
+<div class="container">
+    <div class="card-columns">
+    {% for cnt in cnts %}
+    <div class="card bg-light">
+        <div class="card-body text-center">
+        <p class="card-text">{{ cnt.cname }}</p>
+        <p class="card-text">{{ cnt.date }}</p>
+        <p class="card-text">{{ cnt.time }}<sup>(UTC+0.0)</sup></p>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+
+<div class="jumbotron">
+    <h2>Codechef<sup>(coming soon..)</sup></h2>
+</div>
+{% endblock %}

@@ -1,17 +1,50 @@
 from django.shortcuts import render
 from signupin.forms import UserForm,UserProfileInfoForm
+from signupin.models import CFSchedules
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+import requests
+from bs4 import BeautifulSoup
 
-# Create your views here.
+
 def index(request):
     return render(request,'signupin/index.html')
 
 @login_required
-def special(request):
-    return HttpResponse("You are now logged in !")
+def schedules(request):
+    page = requests.get('https://codeforces.com/contests')
+    soup = BeautifulSoup(page.content,'html.parser')
+    ctable = soup.find('div',{'class':'datatable'})
+    crows = ctable.find_all('tr')
+    for contest in crows[1:]:
+        cn = {}
+        cn['cid'] = contest.get('data-contestid')
+        if CFSchedules.objects.filter(pk=cn['cid']).exists():
+            print('already done')
+            break
+        cn['cname'] = contest.find('td').text[2:-6]
+        atags = contest.find_all('a')
+        csched = ''
+        for atag in atags:
+            if(atag['href'][:16]=='https://www.time'):
+                csched = atag.text[1:-1]
+                break
+        cn['date'] = csched.split(' ')[0]
+        cn['time'] = csched.split(' ')[1]
+        print('saving to DB')
+        cfobj = CFSchedules.objects.create(cid=cn['cid'],
+                           cname=cn['cname'],
+                           date=cn['date'],
+                           time=cn['time'],)
+    print('fetching done!')
+
+    datas = CFSchedules.objects.all()
+    cntdata = {
+        "cnts": datas
+        }
+    return render(request,'signupin/schedules.html',cntdata)
 
 @login_required
 def user_logout(request):

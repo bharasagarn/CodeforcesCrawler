@@ -8,3 +8,9 @@ class UserProfileInfo(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class CFSchedules(models.Model):
+    cid = models.CharField(max_length=10,primary_key=True)
+    cname = models.CharField(max_length=100)
+    date = models.CharField(max_length=20)
+    time = models.CharField(max_length=20)

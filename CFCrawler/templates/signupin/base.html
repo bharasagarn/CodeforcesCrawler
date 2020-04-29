@@ -22,6 +22,9 @@
           </li>
           {% if user.is_authenticated %}
             <li>
+              <a class="nav-link" href="{% url 'signupin:schedules' %}">Contests</a>
+            </li>
+            <li>
               <a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </li>
           {% else %}

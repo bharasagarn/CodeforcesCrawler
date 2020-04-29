@@ -21,7 +21,6 @@ from signupin import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
-    path('special/',views.special,name='special'),
     path('signupin/',include('signupin.urls')),
     path('logout/',views.user_logout,name='logout'),
     path('accounts/', include('allauth.urls')),

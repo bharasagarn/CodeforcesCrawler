@@ -5,46 +5,45 @@ from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-import requests
-from bs4 import BeautifulSoup
-
+from .cfschedules import *
 
 def index(request):
     return render(request,'signupin/index.html')
 
 @login_required
 def schedules(request):
-    page = requests.get('https://codeforces.com/contests')
-    soup = BeautifulSoup(page.content,'html.parser')
-    ctable = soup.find('div',{'class':'datatable'})
-    crows = ctable.find_all('tr')
-    for contest in crows[1:]:
-        cn = {}
-        cn['cid'] = contest.get('data-contestid')
-        if CFSchedules.objects.filter(pk=cn['cid']).exists():
-            print('already done')
-            break
-        cn['cname'] = contest.find('td').text[2:-6]
-        atags = contest.find_all('a')
-        csched = ''
-        for atag in atags:
-            if(atag['href'][:16]=='https://www.time'):
-                csched = atag.text[1:-1]
-                break
-        cn['date'] = csched.split(' ')[0]
-        cn['time'] = csched.split(' ')[1]
-        print('saving to DB')
-        cfobj = CFSchedules.objects.create(cid=cn['cid'],
-                           cname=cn['cname'],
-                           date=cn['date'],
-                           time=cn['time'],)
-    print('fetching done!')
+    cntdata = getFutureContests()
+    return render(request,'signupin/schedules.html',{'cntdata':cntdata})
 
-    datas = CFSchedules.objects.all()
-    cntdata = {
-        "cnts": datas
-        }
-    return render(request,'signupin/schedules.html',cntdata)
+@login_required
+def pastcfschedules(request):
+    cnt = getPages()
+    for p in range(int(cnt)):
+        url = 'https://codeforces.com/contests/page/'+str(p+1)
+        print('fetching page '+url)
+        cntdata = getPastContestsHelper(url)
+        f = True
+        for cn in cntdata:
+            cid = cn['cid']
+            try:
+                cexists = CFSchedules.objects.get(cid=cid)
+                print(cexists)
+                print('no further fetching!')
+                f = False
+                break
+            except CFSchedules.DoesNotExist:
+                cname = cn['cname']
+                date = cn['date']
+                time = cn['time']
+                CFSchedules.objects.create(cid=cid,cname=cname,date=date,time=time)
+                print('created object for '+cid)
+        if f==False:
+            break
+        print('all done for this page')
+    print('all pages done')
+    cntdata = CFSchedules.objects.all()
+
+    return render(request,'signupin/pastcfschedules.html',{'cntdata':cntdata})
 
 @login_required
 def user_logout(request):

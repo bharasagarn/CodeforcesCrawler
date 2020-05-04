@@ -1,0 +1,21 @@
+{% extends "signupin/base.html" %}
+{% block body_block %}
+<div class="jumbotron">
+    <h2>Codeforces Past Contests ...</h2>
+</div>
+<div class="container">
+    <div class="list-group">
+    {% for cnt in cntdata %}
+        <a href="https://codeforces.com/contests" class="list-group-item bg-light list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ cnt.cname }}</h5>
+                <small class="text-muted">Rankings</small>
+            </div>
+            <p class="mb-1">{{ cnt.date }}</p>
+            <p class="mb-1">{{ cnt.time }}<sup>(UTC+0.0</sup></p>
+        </a>
+    {% endfor %}
+    </div>
+</div>
+<br>
+{% endblock %}

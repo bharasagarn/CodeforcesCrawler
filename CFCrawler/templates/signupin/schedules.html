@@ -5,8 +5,8 @@
 </div>
 <div class="container">
     <div class="list-group">
-    {% for cnt in cnts %}
-        <a href="https://codeforces.com/contests" class="list-group-item list-group-item-action flex-column align-items-start">
+    {% for cnt in cntdata %}
+        <a href="https://codeforces.com/contests" class="list-group-item bg-light list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{ cnt.cname }}</h5>
             <small class="text-muted"># days</small>
@@ -15,15 +15,11 @@
           <p class="mb-1">{{ cnt.time }}<sup>(UTC+0.0</sup></p>
           <small class="text-muted">Registrations open</small>
         </a>
-    <!-- <div class="card bg-light">
-        <div class="card-body text-center">
-        <p class="card-text">{{ cnt.cname }}</p>
-        <p class="card-text">{{ cnt.date }}</p>
-        <p class="card-text">{{ cnt.time }}<sup>(UTC+0.0)</sup></p>
-        </div>
-    </div> -->
     {% endfor %}
     </div>
+    <button type="button" class="btn btn-light btn-lg btn-block">
+        <a href="{% url 'signupin:pastcfschedules' %}">Past Contests</a>
+    </button>
 </div>
 <br>
 <div class="jumbotron">

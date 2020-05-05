@@ -1,17 +1,49 @@
 from django.shortcuts import render
 from signupin.forms import UserForm,UserProfileInfoForm
+from signupin.models import CFSchedules
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from .cfschedules import *
 
-# Create your views here.
 def index(request):
     return render(request,'signupin/index.html')
 
 @login_required
-def special(request):
-    return HttpResponse("You are now logged in !")
+def schedules(request):
+    cntdata = getFutureContests()
+    return render(request,'signupin/schedules.html',{'cntdata':cntdata})
+
+@login_required
+def pastcfschedules(request):
+    cnt = getPages()
+    for p in range(int(cnt)):
+        url = 'https://codeforces.com/contests/page/'+str(p+1)
+        print('fetching page '+url)
+        cntdata = getPastContestsHelper(url)
+        f = True
+        for cn in cntdata:
+            cid = cn['cid']
+            try:
+                cexists = CFSchedules.objects.get(cid=cid)
+                print(cexists)
+                print('no further fetching!')
+                f = False
+                break
+            except CFSchedules.DoesNotExist:
+                cname = cn['cname']
+                date = cn['date']
+                time = cn['time']
+                CFSchedules.objects.create(cid=cid,cname=cname,date=date,time=time)
+                print('created object for '+cid)
+        if f==False:
+            break
+        print('all done for this page')
+    print('all pages done')
+    cntdata = CFSchedules.objects.all()
+
+    return render(request,'signupin/pastcfschedules.html',{'cntdata':cntdata})
 
 @login_required
 def user_logout(request):

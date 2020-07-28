@@ -31,7 +31,7 @@ def getPastContestsHelper(url):
     for contest in crows[1:]:
         cn = {}
         cn['cid'] = contest.get('data-contestid')
-        cn['cname'] = contest.find('td').text[2:-6]
+        cn['cname'] = contest.find('td').text[2:-70]
         cn['date'] = contest.find_all('td')[2].find('span',{'class':'format-date'}).text.split(' ')[0]
         cn['time'] = contest.find_all('td')[2].find('span',{'class':'format-date'}).text.split(' ')[1]
         cntdata.append(cn)

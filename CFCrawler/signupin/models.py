@@ -12,5 +12,5 @@ class UserProfileInfo(models.Model):
 class CFSchedules(models.Model):
     cid = models.CharField(max_length=10,primary_key=True)
     cname = models.CharField(max_length=100)
-    date = models.CharField(max_length=20)
-    time = models.CharField(max_length=20)
+    date = models.DateField()
+    time = models.TimeField()

@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .cfschedules import *
+import datetime
 
 def index(request):
     return render(request,'signupin/index.html')
@@ -33,15 +34,29 @@ def pastcfschedules(request):
                 break
             except CFSchedules.DoesNotExist:
                 cname = cn['cname']
-                date = cn['date']
-                time = cn['time']
+                months = {'Jan':'01','Feb':'02','Mar':'03','Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09','Oct':'10','Nov':'11','Dec':'12'}
+                year = int(cn['date'][7:11])
+                day = int(cn['date'][4:6])
+                
+                hr = int(cn['time'][:2])+2
+                min = int(cn['time'][3:5])+30
+                if min>=60:
+                    min = min%60
+                    hr = hr+1
+                if hr>=24:
+                    hr = hr%24
+                    day = day+1
+                print(str(year)+","+str(months[cn['date'][:3]])+","+str(day))
+                print(str(hr)+","+str(min))
+                date = datetime.date(int(year),int(months[cn['date'][:3]]),int(day))
+                time = datetime.time(hr,min,0)
                 CFSchedules.objects.create(cid=cid,cname=cname,date=date,time=time)
                 print('created object for '+cid)
         if f==False:
             break
         print('all done for this page')
     print('all pages done')
-    cntdata = CFSchedules.objects.all()
+    cntdata = CFSchedules.objects.all().order_by('-date')
 
     return render(request,'signupin/pastcfschedules.html',{'cntdata':cntdata})
 

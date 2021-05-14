@@ -65,6 +65,10 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
 
+@login_required
+def profile(request):
+    return render(request,'signupin/profile.html')
+
 def register(request):
     registered = False
     if request.method == 'POST':

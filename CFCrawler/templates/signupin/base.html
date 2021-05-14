@@ -17,10 +17,10 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-          </li>
           {% if user.is_authenticated %}
+            <li>
+              <a class="nav-link" href="{% url 'signupin:profile' %}">Profile</a>
+            </li>
             <li>
               <a class="nav-link" href="{% url 'signupin:schedules' %}">Contests</a>
             </li>
